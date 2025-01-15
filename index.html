@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>girl or boy? - فتاة أو ولد </title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            height: 100vh; 
+            width: 100vw; 
+        }
+        #gameCanvas {
+            display: none; 
+            margin: auto;
+            border: 1px solid #000;
+            width: 100%; 
+            height: 100%; 
+        }
+        #scoreContainer {
+            display: none; 
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #8B8B5B;
+            border-radius: 15px;
+            padding: 5px;
+            width: 150px;
+            text-align: center;
+            font-size: 16px;
+        }
+        #score {
+            font-size: 14px;
+            color: #000;
+        }
+        #progressBar {
+            width: 100%;
+            background-color: #f0e8d2; /* لون الخلفية */
+            border-radius: 5px;
+            overflow: hidden;
+            height: 20px; /* ارتفاع شريط التقدم */
+        }
+        #progress {
+            height: 100%;
+            background-color: #e4c45b; /* لون شريط التقدم (أخضر) */
+            width: 0%; /* يبدأ من 0% */
+        }
+        #lives {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+        .star {
+            display: none; /* إخفاء النجوم */
+            width: 20px;
+            height: 20px;
+            margin-left: 5px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: 2px solid #8B8B5B; /* حدود الزر */
+            border-radius: 25px; /* الزوايا الدائرية */
+            background-color: #f0e68c; /* لون خلفية الزر */
+            color: #757a4e; /* لون النص */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background-color: #e3d05b; /* لون الخلفية عند التحويم */
+            transform: scale(1.05); /* تكبير الزر عند التحويم */
+        }
+        #retryButton, #retryButtonLose {
+            background-color: #f0e68c;
+            color: #000;
+            margin-bottom: 100px;
+        }
+        #retryButton:hover, #retryButtonLose:hover {
+            background-color: #e3d05b;
+            transform: scale(1.05);
+        }
+        #startButton {
+            background-color: #e3d05b;
+            color: rgb(2, 2, 2);
+            margin-top: 140%; /* رفع الزر قليلاً */
+            margin-bottom: 100px; 
+        }
+        #startButton:hover {
+            background-color: #45a049;
+        }
+        #startScreen, #winScreen, #loseScreen {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; 
+            color: white;
+            font-size: 24px;
+            text-align: center;
+        }
+        #startBackground, #winBackground, #loseBackground {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            z-index: -1; 
+            display: none; 
+        }
+        #startBackground {
+            background-image: url('path/to/start-background-image.png'); /* خلفية البداية */
+        }
+        #winBackground {
+            background-image: url('path/to/win-background-image.png'); /* خلفية الفوز */
+        }
+        #loseBackground {
+            background-image: url('path/to/background-image.png'); /* خلفية الخسارة */
+        }
+        button {
+            max-width: 90%; 
+        }
+        @media (max-width: 768px) {
+            #scoreContainer, #lives {
+                font-size: 14px; 
+            }
+            button {
+                padding: 10px 20px; 
+                font-size: 18px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="startBackground" style="display: flex;"></div>
+    <div id="winBackground" style="display: none;"></div>
+    <div id="loseBackground" style="display: none;"></div>
+
+    <div id="startScreen">
+        <button id="startButton" onclick="startGame()">Play</button>
+    </div>
+
+    <div id="winScreen" style="display:none;">
+        <button id="retryButton" onclick="restartGame()">هل حاب تجرب مرا اخره</button>
+    </div>
+
+    <div id="loseScreen" style="display:none; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <img id="retryButtonLose" src="path/to/retry-image.png" onclick="restartGame()" alt="Try Again" style="cursor: pointer; width: 260px; height: 260px; margin-bottom: 40px;">
+    </div>
+
+    <div id="scoreContainer">
+        <div id="score"></div>
+        <div id="progressBar">
+            <div id="progress"></div>
+        </div>
+    </div>
+    <div id="lives">
+        <span id="lifeCount"></span>
+        <img class="star" src="path/to/star-image.png" alt="نجمة" id="star1">
+        <img class="star" src="path/to/star-image.png" alt="نجمة" id="star2">
+        <img class="star" src="path/to/star-image.png" alt="نجمة" id="star3">
+    </div>
+    <canvas id="gameCanvas" width="480" height="640"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let score = 0;
+        let lives = 3;
+        let gameOver = false;
+
+        const shapes = [];
+        const obstacles = [];
+        const paths = [80, 240, 400]; 
+        const shapeImages = [
+            'path/to/image1.png',
+            'path/to/image2.png',
+            'path/to/image3.png',
+            'path/to/image4.png',
+            'path/to/image5.png',
+            'path/to/image6.png',
+            'path/to/image7.png',
+            'path/to/image8.png',
+            'path/to/image9.png',
+            'path/to/image10.png',
+        ];
+        const obstacleImage = 'path/to/obstacle-image.png'; 
+        const basketImage = 'path/to/basket-image.png'; // صورة السلة
+
+        const backgroundImage = new Image();
+        backgroundImage.src = 'path/to/background-image.png';
+
+        const basket = {
+            x: canvas.width / 2 - 75, // وضع السلة في المنتصف
+            y: canvas.height - 190,
+            width: 100, // تغيير حجم السلة
+            height: 150, // تغيير حجم السلة
+            image: new Image(),
+        };
+        basket.image.src = basketImage;
+
+        function drawShape(shape) {
+            const img = new Image();
+            img.src = shape.image;
+            ctx.drawImage(img, shape.x - 25, shape.y - 25, 50, 50); // تغيير حجم الأشكال
+        }
+
+        function drawObstacle(obstacle) {
+            const img = new Image();
+            img.src = obstacleImage;
+            ctx.drawImage(img, obstacle.x - 60, obstacle.y - 40, 60, 40); // رسم العقبة
+        }
+
+        function drawBasket() {
+            ctx.drawImage(basket.image, basket.x, basket.y, basket.width, basket.height); // رسم السلة
+        }
+
+        function createShape() {
+            const path = paths[Math.floor(Math.random() * paths.length)];
+            const shape = {
+                x: path,
+                y: 40,
+                speed: 2 + Math.random() * 2,
+                image: shapeImages[Math.floor(Math.random() * shapeImages.length)],
+            };
+            shapes.push(shape);
+        }
+
+        function createObstacle() {
+            const path = paths[Math.floor(Math.random() * paths.length)];
+            const obstacle = {
+                x: path,
+                y: 40,
+                speed: 2 + Math.random() * 2,
+            };
+            obstacles.push(obstacle);
+        }
+
+        function updateShapes() {
+            for (let i = shapes.length - 1; i >= 0; i--) {
+                const shape = shapes[i];
+                shape.y += shape.speed;
+
+                if (shape.y > canvas.height) {
+                    shapes.splice(i, 1); 
+                } else if (shape.y + 30 > basket.y && shape.x > basket.x && shape.x < basket.x + basket.width) {
+                    score += 10; // زيادة النقاط عند التقاط الشكل
+                    shapes.splice(i, 1); // إزالة الشكل
+                    updateScore();
+                }
+            }
+        }
+
+        function updateObstacles() {
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                obstacle.y += obstacle.speed;
+
+                if (obstacle.y > canvas.height) {
+                    obstacles.splice(i, 1); 
+                } else if (obstacle.y + 20 > basket.y && obstacle.x > basket.x && obstacle.x < basket.x + basket.width) { 
+                    lives--; // تقليل الحياة عند التقاط العقبة
+                    updateLivesDisplay();
+                    obstacles.splice(i, 1); 
+
+                    if (lives <= 0) {
+                        gameOver = true; // إنهاء اللعبة
+                        document.getElementById('loseScreen').style.display = 'flex'; 
+                        document.getElementById('loseBackground').style.display = 'block'; 
+                        document.getElementById('gameCanvas').style.display = 'none'; 
+                    }
+                }
+            }
+        }
+
+        function updateLivesDisplay() {
+            document.getElementById('lifeCount').innerText = lives;
+
+            for (let i = 1; i <= 3; i++) {
+                const star = document.getElementById(`star${i}`);
+                star.style.display = i > lives ? 'none' : 'inline';
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('score') ;
+            const progressWidth = Math.min((score / 150) * 100, 100); // نسبة التقدم
+            document.getElementById('progress').style.width = `${progressWidth}%`; // تحديث عرض شريط التقدم
+
+            if (score >= 150) { 
+                gameOver = true;
+                document.getElementById('winScreen').style.display = 'flex'; 
+                document.getElementById('winBackground').style.display = 'block'; 
+                document.getElementById('gameCanvas').style.display = 'none'; 
+            }
+        }
+
+        function gameLoop() {
+            if (gameOver) return;
+
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            drawBasket(); // رسم السلة
+            shapes.forEach(drawShape);
+            obstacles.forEach(drawObstacle);
+            updateShapes();
+            updateObstacles();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function restartGame() {
+            score = 0;
+            lives = 3;
+            gameOver = false;
+            shapes.length = 0; 
+            obstacles.length = 0; 
+            document.getElementById('retryButton').style.display = 'none'; 
+            document.getElementById('winScreen').style.display = 'none'; 
+            document.getElementById('loseScreen').style.display = 'none'; 
+            document.getElementById('startScreen').style.display = 'none'; 
+            document.getElementById('winBackground').style.display = 'none'; 
+            document.getElementById('loseBackground').style.display = 'none'; 
+            document.getElementById('startBackground').style.display = 'flex'; 
+            document.getElementById('gameCanvas').style.display = 'block'; 
+            document.getElementById('scoreContainer').style.display = 'block'; 
+
+            updateScore();
+            updateLivesDisplay();
+            gameLoop();
+        }
+
+        function startGame() {
+            document.getElementById('startBackground').style.display = 'none'; 
+            document.getElementById('startScreen').style.display = 'none'; 
+            document.getElementById('gameCanvas').style.display = 'block'; 
+            document.getElementById('scoreContainer').style.display = 'block'; // عرض النقاط
+            document.getElementById('lives').style.display = 'flex'; // عرض الحياة
+            setInterval(createShape, 1000); 
+            setInterval(createObstacle, 1500); 
+            updateScore();
+            updateLivesDisplay();
+            gameLoop();
+        }
+
+        // معالجة حركة السلة حسب موقع الماوس
+        canvas.addEventListener('mousemove', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left; // موضع الماوس بالنسبة للوحة
+
+            // تحديث موقع السلة تحت الماوس
+            basket.x = mouseX - basket.width / 2; 
+
+            // منع السلة من الخروج عن حدود اللوحة
+            if (basket.x < 0) {
+                basket.x = 0;
+            } else if (basket.x + basket.width > canvas.width) {
+                basket.x = canvas.width - basket.width;
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
