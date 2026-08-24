@@ -1,110 +1,74 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>girl or boy? - فتاة أو ولد </title>
+    <title>الفارسي للخدمات اللوجستية والاستثمار | ماجد الفارسي</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            text-align: center;
-            height: 100vh; 
-            width: 100vw; 
-        }
-        #gameCanvas {
-            display: none; 
-            margin: auto;
-            border: 1px solid #000;
-            width: 100%; 
-            height: 100%; 
-        }
-        #scoreContainer {
-            display: none; 
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 2px solid #8B8B5B;
-            border-radius: 15px;
-            padding: 5px;
-            width: 150px;
-            text-align: center;
-            font-size: 16px;
-        }
-        #score {
-            font-size: 14px;
-            color: #000;
-        }
-        #progressBar {
-            width: 100%;
-            background-color: #f0e8d2; /* لون الخلفية */
-            border-radius: 5px;
-            overflow: hidden;
-            height: 20px; /* ارتفاع شريط التقدم */
-        }
-        #progress {
-            height: 100%;
-            background-color: #e4c45b; /* لون شريط التقدم (أخضر) */
-            width: 0%; /* يبدأ من 0% */
-        }
-        #lives {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-        }
-        .star {
-            display: none; /* إخفاء النجوم */
-            width: 20px;
-            height: 20px;
-            margin-left: 5px;
-        }
-        button {
-            padding: 15px 30px;
-            font-size: 20px;
-            border: 2px solid #8B8B5B; /* حدود الزر */
-            border-radius: 25px; /* الزوايا الدائرية */
-            background-color: #f0e68c; /* لون خلفية الزر */
-            color: #757a4e; /* لون النص */
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        button:hover {
-            background-color: #e3d05b; /* لون الخلفية عند التحويم */
-            transform: scale(1.05); /* تكبير الزر عند التحويم */
-        }
-        #retryButton, #retryButtonLose {
-            background-color: #f0e68c;
-            color: #000;
-            margin-bottom: 100px;
-        }
-        #retryButton:hover, #retryButtonLose:hover {
-            background-color: #e3d05b;
-            transform: scale(1.05);
-        }
-        #startButton {
-            background-color: #e3d05b;
-            color: rgb(2, 2, 2);
-            margin-top: 140%; /* رفع الزر قليلاً */
-            margin-bottom: 100px; 
-        }
-        #startButton:hover {
-            background-color: #45a049;
-        }
-        #startScreen, #winScreen, #loseScreen {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between; 
+        body { font-family: 'Tajawal', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); }
+        .gold-accent { color: #D97706; }
+        .bg-gold { background-color: #D97706; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-slate-900 text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-wide">
+                الفارسي <span class="gold-accent">للاستثمار واللوجستيات</span>
+            </div>
+            <div class="hidden md:flex space-x-8 space-x-reverse font-medium">
+                <a href="#home" class="hover:text-amber-500 transition">الرئيسية</a>
+                <a href="#about" class="hover:text-amber-500 transition">من نحن</a>
+                <a href="#services" class="hover:text-amber-500 transition">الخدمات</a>
+                <a href="#projects" class="hover:text-amber-500 transition">المشاريع</a>
+                <a href="#contact" class="hover:text-amber-500 transition">اتصل بنا</a>
+            </div>
+            <a href="#contact" class="bg-gold hover:bg-amber-600 text-white px-5 py-2 rounded-lg transition font-bold shadow-md">طلب استشارة</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section (الرئيسية) -->
+    <section id="home" class="hero-bg text-white py-24 px-6 text-center md:text-right">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="bg-amber-500/20 text-amber-400 px-4 py-1.5 rounded-full text-sm font-semibold border border-amber-500/30">رؤية حكيمة، وحلول لوجستية شاملة</span>
+                <h1 class="text-4xl md:text-6xl font-black mt-6 leading-tight">
+                    قيادة الاستثمار <br><span class="gold-accent">وتكامل سلاسل الإمداد</span>
+                </h1>
+                <p class="text-gray-300 text-lg mt-6 leading-relaxed">
+                    تحت قيادة <strong>ماجد الفارسي</strong>، نقدم حلولاً لوجستية وفرصاً استثمارية مستدامة تبني المستقبل وتدعم توسّع أعمالك بكفاءة وأمان.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
+                    <a href="#projects" class="bg-gold hover:bg-amber-600 text-white font-bold px-8 py-3.5 rounded-lg shadow-lg transition">استكشف المشاريع</a>
+                    <a href="#services" class="border border-gray-500 hover:border-amber-500 text-white font-bold px-8 py-3.5 rounded-lg transition">خدماتنا</a>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
+                    <h3 class="text-xl font-bold mb-4 gold-accent">أرقام ومؤشرات النجاح</h3>
+                    <div class="grid grid-cols-2 gap-6 text-center">
+                        <div class="p-4 bg-slate-900/50 rounded-xl">
+                            <span class="block text-3xl font-extrabold text-amber-500">+150</span>
+                            <span class="text-sm text-gray-400">مشروع استثماري</span>
+                        </div>
+                        <div class="p-4 bg-slate-900/50 rounded-xl">
+                            <span class="block text-3xl font-extrabold text-amber-500">99%</span>
+                            <span class="text-sm text-gray-400">دقة التوصيل والتدفق</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
             color: white;
             font-size: 24px;
             text-align: center;
